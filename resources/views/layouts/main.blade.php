@@ -26,7 +26,7 @@
 
 <body>
 <div class="wrapper">
-    @include('layouts.navbar');
+    @include('layouts.navbar')
     <!--========================== Contant-Area================================-->
     <div class="contant-area">
         <div class="container">

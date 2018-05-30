@@ -31,9 +31,7 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-left">
                         <li><a href="{{ url('/') }}">home</a></li>
-                        <li><a href="about.html">about</a></li>
-                        <li><a href="contact.html">contact</a></li>
-                        <li><a href="details.html">Post Details</a></li>
+                        <li><a href="{{ url('/threads/create') }}">New Threads</a></li>
 
                     </ul>
                     <ul class="nav navbar-nav navbar-right hidden-xs">

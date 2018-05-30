@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use function create;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -38,19 +39,30 @@ class ReadThreadsTest extends TestCase
     /** @test */
     public function a_user_can_browse_a_thread()
     {
-        $response = $this->get('/threads/'.$this->thread->id);
+        $response = $this->get($this->thread->path());
         $response->assertSee($this->thread->title);
     }
 
     /** @test */
-    public function a_user_can_read_replies_of_a_thread(){
+    public function a_user_can_read_replies_of_a_thread()
+    {
 
-        $reply = factory('App\Reply')->create(['thread_id'=>$this->thread->id]);
-        $response = $this->get('/threads/'.$this->thread->id);
+        $reply = factory('App\Reply')->create(['thread_id' => $this->thread->id]);
+        $response = $this->get($this->thread->path());
         $response->assertSee($reply->body);
     }
 
+    /** @test */
+    public function a_user_can_filter_threads_according_to_a_channel()
+    {
+        $channel= create('App\Channel');
+        $threadInChannel = create('App\Thread',['channel_id'=>$channel->id]);
+        $threadNotInChannel=create('App\Thread');
 
+        $this->get('/threads/' . $channel->slug)
+            ->assertSee($threadInChannel->title)
+            ->assertDontSee($threadNotInChannel->title);
+    }
 
 
 }

@@ -1,11 +1,12 @@
 <div class="left-sidebar">
+
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingOne">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion"
-                       href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Top
-                        Reted
+                       href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Channels
                         <i class="fa fa-angle-right"></i>
                         <i class="fa fa-angle-down"></i>
                     </a>
@@ -15,11 +16,9 @@
                  aria-labelledby="headingOne">
                 <div class="panel-body">
                     <ul>
-                        <li><a href="#">Lorern ipsum</a></li>
-                        <li><a href="#">Dolor sit amet</a></li>
-                        <li><a href="#">Consectetur</a></li>
-                        <li><a href="#">Adipisicing elit</a></li>
-                        <li><a href="#">tempor</a></li>
+                        @foreach($channels as $channel)
+                        <li><a href="{{'/threads/'.$channel->slug}}">{{$channel->slug}}</a></li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
