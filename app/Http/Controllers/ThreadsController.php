@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Filters\ThreadsFilter;
 use App\Thread;
+use App\User;
 use Illuminate\Http\Request;
 
 class ThreadsController extends Controller
@@ -20,15 +22,11 @@ class ThreadsController extends Controller
      * @param Channel $channel
      * @return \Illuminate\Http\Response
      */
-    public function index(Channel $channel)
+    public function index(Channel $channel,ThreadsFilter $threadsFilter)
     {
-        if($channel->exists){
-//            $channelId=Channel::where('slug',$channelSlug)->first()->id;
-//            $threads=Thread::where('channel_id',$channelId)->latest()->get();
-            $threads = $channel->threads()->latest()->get();
-        }else{
-            $threads=Thread::all();
-        }
+
+        $threads = $this->getThreads($channel, $threadsFilter);
+
         return view('threads.index',compact('threads'));
     }
 
@@ -111,4 +109,23 @@ class ThreadsController extends Controller
     {
         //
     }
+
+    /**
+     * @param Channel $channel
+     * @param ThreadsFilter $threadsFilter
+     * @return mixed
+     */
+    protected function getThreads(Channel $channel, ThreadsFilter $threadsFilter)
+    {
+        $threads = Thread::latest()->filter($threadsFilter);
+
+        if ($channel->exists) {
+            $threads->where('channel_id', $channel->id);
+        }
+
+        $threads = $threads->get();
+        return $threads;
+    }
+
+
 }
