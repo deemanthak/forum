@@ -55,7 +55,7 @@
                 {{--</div>--}}
             {{--</div>--}}
             <div class="comment-post">
-                <h3>{{$thread->replies->count()}} comments</h3>
+                <h3>{{$thread->replies()->count()}} comments</h3>
                 @foreach($thread->replies as $reply)
                     @include('threads.reply')
                 @endforeach
