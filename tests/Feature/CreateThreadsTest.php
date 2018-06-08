@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use function create;
 use function factory;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use function signIn;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,7 +15,7 @@ class CreateThreadsTest extends TestCase
 {
 
     use DatabaseTransactions;
-
+    use DatabaseMigrations;
     /** @test */
     public function guest_may_not_create_new_forum_thread(){
 
@@ -83,4 +85,41 @@ class CreateThreadsTest extends TestCase
 
       return $this->post('/threads',$thread->toArray());
    }
+
+   /** @test */
+   public function guest_cannot_delete_threads(){
+       $this->withExceptionHandling();
+       $thread=create('App\Thread');
+       $response = $this->delete($thread->path());
+       $response->assertRedirect('/login');
+   }
+
+    /** @test */
+    public function threads_may_only_be_deleted_by_those_who_have_permission(){
+        $this->withExceptionHandling();
+        $thread=create('App\Thread');
+        $this->delete($thread->path())
+            ->assertRedirect('/login');
+
+        $this->actingAs(create('App\User'));
+        $this->delete($thread->path())
+            ->assertStatus(403);
+//            ->assertRedirect('/login');
+    }
+
+   /** @test */
+   public function athorized_users_thread_can_be_deleted(){
+       $this->signIn();
+       $thread=create('App\Thread',['user_id'=>auth()->id()]);
+       $reply=create('App\Reply',['thread_id'=>$thread->id]);
+
+       $response = $this->json('DELETE',$thread->path());
+
+       $response->assertStatus(204);
+       $this->assertDatabaseMissing('threads',['id'=>$thread->id]);
+       $this->assertDatabaseMissing('replies',['id'=>$reply->id]);
+   }
+
+
+
 }

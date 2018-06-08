@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use function array_column;
 use function create;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -16,7 +17,7 @@ class ReadThreadsTest extends TestCase
      *
      * @return void
      */
-
+    use DatabaseMigrations;
     use DatabaseTransactions;
 
     private $thread;
@@ -76,5 +77,22 @@ class ReadThreadsTest extends TestCase
 
     }
 
+    /** @test */
+    public function a_user_can_filter_threads_by_popularity(){
+
+        $threadsTwoReply=create('App\Thread');
+        create('App\Reply',['thread_id'=>$threadsTwoReply->id],2);
+
+        $threadsThreeReply=create('App\Thread');
+        create('App\Reply',['thread_id'=>$threadsThreeReply->id],3);
+
+        $threadsNoReply=$this->thread;
+//        create('App\Reply',['thread_id'=>$threadsNoReply->id],2);
+
+
+        $response = $this->getJson('threads?popular=1')->json();
+
+        $this->assertEquals([3,2,0],array_column($response,'replies_count'));
+    }
 
 }

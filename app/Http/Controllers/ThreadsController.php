@@ -7,6 +7,8 @@ use App\Filters\ThreadsFilter;
 use App\Thread;
 use App\User;
 use Illuminate\Http\Request;
+use function redirect;
+use function response;
 
 class ThreadsController extends Controller
 {
@@ -20,12 +22,17 @@ class ThreadsController extends Controller
      * Display a listing of the resource.
      *
      * @param Channel $channel
+     * @param ThreadsFilter $threadsFilter
      * @return \Illuminate\Http\Response
      */
     public function index(Channel $channel,ThreadsFilter $threadsFilter)
     {
 
         $threads = $this->getThreads($channel, $threadsFilter);
+
+        if(request()->wantsJson()){
+            return $threads;
+        }
 
         return view('threads.index',compact('threads'));
     }
@@ -73,7 +80,9 @@ class ThreadsController extends Controller
      */
     public function show($channelId,Thread $thread)
     {
-       return view('threads.show',compact('thread'));
+//        return $thread->replies;
+        $replies = $thread->replies()->paginate(25);
+       return view('threads.show',compact('thread','replies'));
     }
 
     /**
@@ -102,12 +111,28 @@ class ThreadsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Thread  $thread
-     * @return \Illuminate\Http\Response
+     * @param $channel
+     * @param  \App\Thread $thread
+     * @return void
+     * @throws \Exception
      */
-    public function destroy(Thread $thread)
+    public function destroy($channel,Thread $thread)
     {
-        //
+        $this->authorize('update',$thread);
+//        if($thread->user_id !=auth()->id()){
+//            if(request()->wantsJson()){
+//                return response(['status'=>'Permission Denied'],403);
+//            }
+//            return redirect('/login');
+//        }
+//        $thread->replies()->delete();
+        $thread->delete();
+
+        if(request()->wantsJson()){
+            return response([],204);
+        }
+
+        return redirect('/threads');
     }
 
     /**
@@ -117,6 +142,7 @@ class ThreadsController extends Controller
      */
     protected function getThreads(Channel $channel, ThreadsFilter $threadsFilter)
     {
+
         $threads = Thread::latest()->filter($threadsFilter);
 
         if ($channel->exists) {

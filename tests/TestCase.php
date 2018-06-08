@@ -34,4 +34,8 @@ abstract class TestCase extends BaseTestCase
         $this->app->instance(ExceptionHandler::class, $this->oldExceptionHandler);
         return $this;
     }
+
+    public function signIn(){
+        return  $this->actingAs(create('App\User'));
+    }
 }

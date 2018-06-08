@@ -6,7 +6,7 @@
         <div class="main-content">
 
 
-        @foreach($threads as $thread)
+        @forelse($threads as $thread)
 
 
             <article>
@@ -19,14 +19,16 @@
                 <a href="{{$thread->path()}}"><h2 class="post-title">{{ $thread->title }}</h2></a>
                 <div class="post-meta">
                     <span><a href="#"><i class="fa fa-share-alt post-meta-icon"></i> 400 Shares </a></span>
-                    <span><a href="#"><i class="fa fa-comments post-meta-icon"></i> 20 Comments </a></span>
-                    <span><a href="#"><i class="fa fa-calendar-check-o post-meta-icon"></i> april 13, 2015 </a></span>
+                    <span><a href="#"><i class="fa fa-comments post-meta-icon"></i> {{$thread->replies_count}} {{str_plural('comment',$thread->replies_count)}} </a></span>
+                    <span><a href="#"><i class="fa fa-calendar-check-o post-meta-icon"></i> {{$thread->created_at->diffForHumans()}} </a></span>
                 </div>
                 <div class="post-content">
                     <p>{{ $thread->body }}</p>
                 </div>
             </article>
-            @endforeach
+            @empty
+            <p>There are no threads</p>
+            @endforelse
 
         </div><!-- main-content -->
         <div class="pagination">

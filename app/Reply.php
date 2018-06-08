@@ -2,13 +2,24 @@
 
 namespace App;
 
+use function auth;
 use Illuminate\Database\Eloquent\Model;
 
 class Reply extends Model
 {
-    protected $guarded=[];
+    use Favouritable,RecordsActivity;
 
-    public function owner(){
-        return $this->belongsTo('App\User','user_id');
+    protected $guarded = [];
+
+    protected $with=['owner','favourites'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner()
+    {
+        return $this->belongsTo('App\User', 'user_id');
     }
+
+
 }

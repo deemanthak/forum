@@ -32,6 +32,7 @@
                     <ul class="nav navbar-nav navbar-left">
                         <li><a href="{{ url('/') }}">Home</a></li>
                         <li><a href="{{ url('/threads/create') }}">New Threads</a></li>
+                        <li><a href="{{ url('/threads?popular=1') }}">Popular Threads</a></li>
                         @if(auth()->check())
                         <li><a href="/threads?by={{auth()->user()->name}}">My Threads</a></li>
                         @endif
@@ -47,6 +48,11 @@
                                 </a>
 
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                    <a class="dropdown-item" href="{{ route('profile',Auth::user()) }}">
+                                        My Profile
+                                    </a>
+                                    <hr>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
