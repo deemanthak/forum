@@ -14,6 +14,8 @@ try {
     require('bootstrap');
 } catch (e) {}
 
+
+window.Vue = require('vue');
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
@@ -54,3 +56,8 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+window.events = new Vue();
+
+window.flash = function (message){
+    window.events.$emit('flash',message);
+};

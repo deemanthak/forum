@@ -17,7 +17,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div clas
+
                     <div class="form-group">
                         <label for="">Title</label>
                         <input class="form-control" name="title" value="{{ old('title') }}" required>

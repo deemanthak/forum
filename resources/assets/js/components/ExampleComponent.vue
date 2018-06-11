@@ -1,21 +1,10 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card card-default">
-                    <div class="card-header">Example Component</div>
-
-                    <div class="card-body">
-                        I'm an example component.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <h5>hgkghjhj</h5>
 </template>
 
 <script>
     export default {
+        name:"ExampleComponent",
         mounted() {
             console.log('Component mounted.')
         }

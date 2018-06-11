@@ -57,7 +57,7 @@ class RepliesController extends Controller
 
         ]);
 
-        return back();
+        return back()->with('flash',"your reply has been published");
     }
 
     /**

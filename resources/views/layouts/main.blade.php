@@ -25,7 +25,7 @@
 </head>
 
 <body>
-<div class="wrapper">
+<div class="wrapper" id="app">
     @include('layouts.navbar')
     <!--========================== Contant-Area================================-->
     <div class="contant-area">
@@ -46,12 +46,15 @@
         </div><!-- Container -->
     </div><!-- Content-area -->
     @include('layouts.footer')
-
+<flash message="{{ session('flash') }}"></flash>
 </div><!-- /Wrapper -->
 
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- development version, includes helpful console warnings -->
+{{--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>--}}
+<script src="{{asset('js/app.js')}}"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <script src="{{asset('js/custom.js')}}"></script>
