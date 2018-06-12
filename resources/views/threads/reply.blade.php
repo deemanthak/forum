@@ -9,6 +9,9 @@
         </div>
         <p>{{$reply->body}} </p>
         <li> <form id="form-favourite-{{$reply->id}}" method="post" action="/replies/{{$reply->id}}/favourites">{{csrf_field()}} {{ $reply->favourites_count }}  <a href="#" style="{{ $reply->isFavourited() ? 'color:#66bb6a' : '' }}" onclick="document.getElementById('form-favourite-{{$reply->id}}').submit();"><i class="fa fa-thumbs-up"></i></a></form> </li>
+        @can('update',$reply)
+        <li> <form id="form-delete-{{$reply->id}}" method="post" action="/replies/{{$reply->id}}">{{csrf_field()}} {{ method_field('DELETE') }}  <a href="#" style="color: red;"  onclick="document.getElementById('form-delete-{{$reply->id}}').submit();"><i class="fa fa-trash"></i> DELETE </a></form> </li>
+        @endcan
         {{--<li><a href="#"><i class="fa fa-thumbs-down"></i></a></li>--}}
         <li><a class="pull-right" href="#">Reply</a></li>
     </div>

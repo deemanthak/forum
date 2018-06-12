@@ -15,7 +15,7 @@ class ThreadsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except(['index','show']);
+        $this->middleware('auth')->except(['index', 'show']);
     }
 
     /**
@@ -25,16 +25,16 @@ class ThreadsController extends Controller
      * @param ThreadsFilter $threadsFilter
      * @return \Illuminate\Http\Response
      */
-    public function index(Channel $channel,ThreadsFilter $threadsFilter)
+    public function index(Channel $channel, ThreadsFilter $threadsFilter)
     {
 
         $threads = $this->getThreads($channel, $threadsFilter);
 
-        if(request()->wantsJson()){
+        if (request()->wantsJson()) {
             return $threads;
         }
 
-        return view('threads.index',compact('threads'));
+        return view('threads.index', compact('threads'));
     }
 
     /**
@@ -50,25 +50,25 @@ class ThreadsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
 
-        $this->validate($request,[
-           'title'=>'required',
-            'body'=>'required',
-            'channel_id'=>'required|exists:channels,id'
+        $this->validate($request, [
+            'title' => 'required',
+            'body' => 'required',
+            'channel_id' => 'required|exists:channels,id'
         ]);
 
-       $thread = Thread::create([
-            'user_id'=>auth()->id(),
-            'title'=>$request['title'],
-            'channel_id'=>$request['channel_id'],
-            'body'=>$request['body']
-       ]);
-       return redirect($thread->path())->with('flash',"your thread has been published");
+        $thread = Thread::create([
+            'user_id' => auth()->id(),
+            'title' => $request['title'],
+            'channel_id' => $request['channel_id'],
+            'body' => $request['body']
+        ]);
+        return redirect($thread->path())->with('flash', "your thread has been published");
     }
 
     /**
@@ -78,17 +78,17 @@ class ThreadsController extends Controller
      * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
-    public function show($channelId,Thread $thread)
+    public function show($channelId, Thread $thread)
     {
 //        return $thread->replies;
         $replies = $thread->replies()->paginate(25);
-       return view('threads.show',compact('thread','replies'));
+        return view('threads.show', compact('thread', 'replies'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
     public function edit(Thread $thread)
@@ -99,8 +99,8 @@ class ThreadsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Thread  $thread
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Thread $thread)
@@ -116,9 +116,9 @@ class ThreadsController extends Controller
      * @return void
      * @throws \Exception
      */
-    public function destroy($channel,Thread $thread)
+    public function destroy($channel, Thread $thread)
     {
-        $this->authorize('update',$thread);
+        $this->authorize('update', $thread);
 //        if($thread->user_id !=auth()->id()){
 //            if(request()->wantsJson()){
 //                return response(['status'=>'Permission Denied'],403);
@@ -128,11 +128,11 @@ class ThreadsController extends Controller
 //        $thread->replies()->delete();
         $thread->delete();
 
-        if(request()->wantsJson()){
-            return response([],204);
+        if (request()->wantsJson()) {
+            return response([], 204);
         }
 
-        return redirect('/threads')->with('flash',"Thread has been deleted");
+        return redirect('/threads')->with('flash', "Thread has been deleted");
     }
 
     /**
@@ -144,11 +144,9 @@ class ThreadsController extends Controller
     {
 
         $threads = Thread::latest()->filter($threadsFilter);
-
         if ($channel->exists) {
             $threads->where('channel_id', $channel->id);
         }
-
         $threads = $threads->get();
         return $threads;
     }

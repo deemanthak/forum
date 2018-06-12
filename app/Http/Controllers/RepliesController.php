@@ -97,11 +97,16 @@ class RepliesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Reply  $reply
+     * @param  \App\Reply $reply
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Reply $reply)
     {
-        //
+//        if($reply->user_id != auth()->id())
+//            return response([],403);
+$this->authorize('update',$reply);
+        $reply->delete();
+        return back();
     }
 }
